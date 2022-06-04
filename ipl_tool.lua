@@ -2,14 +2,6 @@ local ipls = {}
 local showIplHandles = false
 local range = 50.0
 
-function PrintMessage(target, message)
-	if target and target > 0 then
-		TriggerClientEvent('chat:addMessage', target, message)
-	else
-		print(table.concat(message.args, ': '))
-	end
-end
-
 TriggerEvent('chat:addSuggestion', '/ipltool', 'Display IPL/IMAP hashes at/near their coordinates', {})
 RegisterCommand("ipltool", function(source, args, rawCommand)
   if showIplHandles == false then
@@ -97,18 +89,16 @@ function drawIplHandle(ipl, playerCoords)
   local distance = #(playerCoords - coords)
   local offset = distance/25
 	if distance <= range then
-    if (N_0x73b40d97d7baad77(ipl.dec_hash, playerCoords.x, playerCoords.y, playerCoords.z)) then 
-      local numRenderedHandles = #renderedHandles
-      if numRenderedHandles >= 1 then
-        for _, renderedHandle in next, renderedHandles do
-          if #(vector3(renderedHandle.x, renderedHandle.y, renderedHandle.z) - coords) <= offset then
-            coords = coords + offset
-          end
+    local numRenderedHandles = #renderedHandles
+    if numRenderedHandles >= 1 then
+      for _, renderedHandle in next, renderedHandles do
+        if #(vector3(renderedHandle.x, renderedHandle.y, renderedHandle.z) - coords) <= offset then
+          coords = coords + offset
         end
       end
-      table.insert(renderedHandles, ipl)
-      drawText3d(coords.x, coords.y, coords.z, ipl)
     end
+    table.insert(renderedHandles, ipl)
+    drawText3d(coords.x, coords.y, coords.z, ipl)
 	end
 end
 
